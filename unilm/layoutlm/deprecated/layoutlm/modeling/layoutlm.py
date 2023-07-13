@@ -61,6 +61,7 @@ class LayoutlmEmbeddings(nn.Module):
         inputs_embeds=None,
     ):
         seq_length = input_ids.size(1)
+
         if position_ids is None:
             position_ids = torch.arange(
                 seq_length, dtype=torch.long, device=input_ids.device
@@ -78,6 +79,12 @@ class LayoutlmEmbeddings(nn.Module):
         h_position_embeddings = self.h_position_embeddings(
             bbox[:, :, 3] - bbox[:, :, 1]
         )
+        
+        # print("Input tensor shape:", input_ids.shape)  # Print the shape of the input tensor
+        print("Position embeddings size:", self.w_position_embeddings.weight.size())
+        print("Maximum index value:", torch.max(input_ids))
+
+
         w_position_embeddings = self.w_position_embeddings(
             bbox[:, :, 2] - bbox[:, :, 0]
         )
@@ -278,9 +285,20 @@ class LayoutlmForSequenceClassification(BertPreTrainedModel):
 
         pooled_output = outputs[1]
 
+        # Print the minimum and maximum values of each input
+        print("Input IDs - Min:", torch.min(input_ids), "Max:", torch.max(input_ids))
+        print("BBox - Min:", torch.min(bbox), "Max:", torch.max(bbox))
+        if attention_mask is not None:
+            print("Attention Mask - Min:", torch.min(attention_mask), "Max:", torch.max(attention_mask))
+        if token_type_ids is not None:
+            print("Token Type IDs - Min:", torch.min(token_type_ids), "Max:", torch.max(token_type_ids))
+        if position_ids is not None:
+            print("Position IDs - Min:", torch.min(position_ids), "Max:", torch.max(position_ids))
+        if head_mask is not None:
+            print("Head Mask - Min:", torch.min(head_mask), "Max:", torch.max(head_mask))
+
         pooled_output = self.dropout(pooled_output)
         logits = self.classifier(pooled_output)
-
         outputs = (logits,) + outputs[
             2:
         ]  # add hidden states and attention if they are here

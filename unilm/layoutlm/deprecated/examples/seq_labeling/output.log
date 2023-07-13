@@ -1,0 +1,68 @@
+WARNING:__main__:Process rank: -1, device: cpu, n_gpu: 0, distributed training: False, 16-bits training: False
+Epoch:   0%|          | 0/1 [00:00<?, ?it/s]
+Iteration:   0%|          | 0/52 [00:00<?, ?it/s][A/usr/local/lib/python3.10/dist-packages/transformers/optimization.py:155: UserWarning: This overload of add_ is deprecated:
+	add_(Number alpha, Tensor other)
+Consider using one of the following signatures instead:
+	add_(Tensor other, *, Number alpha) (Triggered internally at ../torch/csrc/utils/python_arg_parser.cpp:1485.)
+  exp_avg.mul_(beta1).add_(1.0 - beta1, grad)
+
+Iteration:   2%|▏         | 1/52 [00:10<08:50, 10.40s/it][A
+Iteration:   4%|▍         | 2/52 [00:16<06:26,  7.73s/it][A
+Iteration:   6%|▌         | 3/52 [00:23<06:02,  7.39s/it][A
+Iteration:   8%|▊         | 4/52 [00:31<06:09,  7.70s/it][A
+Iteration:  10%|▉         | 5/52 [00:37<05:28,  6.99s/it][A
+Iteration:  12%|█▏        | 6/52 [00:44<05:24,  7.05s/it][A
+Iteration:  13%|█▎        | 7/52 [00:52<05:30,  7.35s/it][A
+Iteration:  15%|█▌        | 8/52 [00:57<04:59,  6.80s/it][A
+Iteration:  17%|█▋        | 9/52 [01:04<04:55,  6.87s/it][A
+Iteration:  19%|█▉        | 10/52 [01:12<05:01,  7.18s/it][A
+Iteration:  21%|██        | 11/52 [01:18<04:36,  6.75s/it][A
+Iteration:  23%|██▎       | 12/52 [01:25<04:31,  6.78s/it][A
+Iteration:  25%|██▌       | 13/52 [01:33<04:40,  7.18s/it][A
+Iteration:  27%|██▋       | 14/52 [01:39<04:15,  6.73s/it][A
+Iteration:  29%|██▉       | 15/52 [01:46<04:11,  6.79s/it][A
+Iteration:  31%|███       | 16/52 [01:54<04:15,  7.11s/it][A
+Iteration:  33%|███▎      | 17/52 [01:59<03:55,  6.72s/it][A
+Iteration:  35%|███▍      | 18/52 [02:07<03:53,  6.87s/it][A
+Iteration:  37%|███▋      | 19/52 [02:14<03:56,  7.16s/it][A
+Iteration:  38%|███▊      | 20/52 [02:20<03:35,  6.74s/it][A
+Iteration:  40%|████      | 21/52 [02:27<03:34,  6.92s/it][A
+Iteration:  42%|████▏     | 22/52 [02:36<03:37,  7.26s/it][A
+Iteration:  44%|████▍     | 23/52 [02:41<03:18,  6.83s/it][A
+Iteration:  46%|████▌     | 24/52 [02:49<03:13,  6.93s/it][A
+Iteration:  48%|████▊     | 25/52 [02:57<03:17,  7.31s/it][A
+Iteration:  50%|█████     | 26/52 [03:02<02:56,  6.81s/it][A
+Iteration:  52%|█████▏    | 27/52 [03:09<02:52,  6.88s/it][A
+Iteration:  54%|█████▍    | 28/52 [03:18<02:54,  7.28s/it][A
+Iteration:  56%|█████▌    | 29/52 [03:24<02:37,  6.87s/it][A
+Iteration:  58%|█████▊    | 30/52 [03:31<02:34,  7.04s/it][A
+Iteration:  60%|█████▉    | 31/52 [03:44<03:08,  8.96s/it][A
+Iteration:  62%|██████▏   | 32/52 [03:51<02:43,  8.17s/it][A
+Iteration:  63%|██████▎   | 33/52 [03:59<02:37,  8.29s/it][AIteration:  63%|██████▎   | 33/52 [03:59<02:18,  7.27s/it]
+Epoch:   0%|          | 0/1 [03:59<?, ?it/s]
+Traceback (most recent call last):
+  File "/content/drive/.shortcut-targets-by-id/1zrhpVd7lvAz2O321iC8keqhEFanRnfuJ/THESIS/ExCeipt_Dataset/Libraries/unilm/layoutlm/deprecated/examples/seq_labeling/run_seq_labeling.py", line 811, in <module>
+    main()
+  File "/content/drive/.shortcut-targets-by-id/1zrhpVd7lvAz2O321iC8keqhEFanRnfuJ/THESIS/ExCeipt_Dataset/Libraries/unilm/layoutlm/deprecated/examples/seq_labeling/run_seq_labeling.py", line 703, in main
+    global_step, tr_loss = train(
+  File "/content/drive/.shortcut-targets-by-id/1zrhpVd7lvAz2O321iC8keqhEFanRnfuJ/THESIS/ExCeipt_Dataset/Libraries/unilm/layoutlm/deprecated/examples/seq_labeling/run_seq_labeling.py", line 219, in train
+    outputs = model(**inputs)
+  File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/layoutlm/modeling/layoutlm.py", line 211, in forward
+    outputs = self.bert(
+  File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/layoutlm/modeling/layoutlm.py", line 170, in forward
+    embedding_output = self.embeddings(
+  File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/layoutlm/modeling/layoutlm.py", line 81, in forward
+    w_position_embeddings = self.w_position_embeddings(
+  File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/sparse.py", line 162, in forward
+    return F.embedding(
+  File "/usr/local/lib/python3.10/dist-packages/torch/nn/functional.py", line 2210, in embedding
+    return torch.embedding(weight, input, padding_idx, scale_grad_by_freq, sparse)
+IndexError: index out of range in self

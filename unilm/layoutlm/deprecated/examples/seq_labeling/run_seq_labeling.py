@@ -205,6 +205,11 @@ def train(  # noqa C901
         )
         for step, batch in enumerate(epoch_iterator):
             model.train()
+            
+            # Check if the input indices are within range
+            if batch[0].size(0) <= 0:
+                continue
+    
             inputs = {
                 "input_ids": batch[0].to(args.device),
                 "attention_mask": batch[1].to(args.device),
@@ -214,8 +219,24 @@ def train(  # noqa C901
                 inputs["bbox"] = batch[4].to(args.device)
             inputs["token_type_ids"] = (
                 batch[2].to(args.device) if args.model_type in ["bert", "layoutlm"] else None
-            )  # RoBERTa don"t use segment_ids
-
+            ) # RoBERTa don"t use segment_ids
+            
+                
+            # Print the minimum and maximum values of each input
+            # print("\nInput IDs - Min:", torch.min(inputs["input_ids"]), "Max:", torch.max(inputs["input_ids"]))
+            print("Attention Mask - Min:", torch.min(inputs["attention_mask"]), "Max:", torch.max(inputs["attention_mask"]))
+            if "token_type_ids" in inputs:
+                print("Token Type IDs - Min:", torch.min(inputs["token_type_ids"]), "Max:", torch.max(inputs["token_type_ids"]))
+            if "bbox" in inputs:
+                print("BBox - Min:", torch.min(inputs["bbox"]), "Max:", torch.max(inputs["bbox"]))
+                
+            # Check for out-of-range indices
+            for key, value in inputs.items():
+                if len(value) > 0 and value.min() < 0:
+                    print(f"Warning: {key} index out of range: {value.min()}")
+                    continue
+                    
+                    
             outputs = model(**inputs)
             # model outputs are always tuple in pytorch-transformers (see doc)
             loss = outputs[0]
@@ -304,7 +325,7 @@ def train(  # noqa C901
     if args.local_rank in [-1, 0]:
         tb_writer.close()
 
-    return global_step, tr_loss / global_step
+    return global_step, tr_loss / global_step   
 
 
 def evaluate(args, model, tokenizer, labels, pad_token_label_id, mode, prefix=""):
