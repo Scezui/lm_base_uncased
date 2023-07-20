@@ -260,7 +260,10 @@ def train(  # noqa C901
                                 inputs["bbox"] = torch.index_select(inputs["bbox"], 0, torch.tensor(valid_labels.nonzero(as_tuple=False)))
 
                             # Update the mask tensor to match the shape of the active_labels tensor
-                            inputs["mask"] = torch.index_select(inputs["mask"], 0, torch.tensor(valid_labels.nonzero(as_tuple=False)))
+                            valid_mask = inputs["mask"].clone()
+                            valid_mask[valid_mask == 0] = False
+                            inputs["mask"] = valid_mask
+
 
 
             except RuntimeError as e:
