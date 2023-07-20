@@ -247,8 +247,7 @@ def train(  # noqa C901
                             print(f"Invalid {key} indices: {invalid_indices}")
 
                             # Remove invalid indices from the labels tensor
-                            valid_labels = value.clone()
-                            valid_labels[valid_labels == -100] = 0
+                            valid_labels = value[value != -100]
                             inputs["labels"] = valid_labels
 
                             # Update the other tensors to reflect the changes to the labels tensor
@@ -260,6 +259,9 @@ def train(  # noqa C901
                             if "bbox" in inputs:
                                 inputs["bbox"] = torch.index_select(inputs["bbox"], 0, torch.tensor(valid_labels.nonzero(as_tuple=False)))
 
+                            # Remove invalid indices from the position embeddings tensor
+                            valid_position_ids = torch.tensor(valid_labels.nonzero(as_tuple=False)).max() + 1
+                            inputs["position_embeddings"] = inputs["position_embeddings"][:valid_position_ids]
 
 
             except RuntimeError as e:
