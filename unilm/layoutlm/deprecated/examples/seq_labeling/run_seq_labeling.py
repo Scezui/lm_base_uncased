@@ -242,6 +242,8 @@ def train(  # noqa C901
                     if len(value) > 0 and value.min() < 0:
                         print(f"Warning: {key} index out of range: {value.min()}")
                         if key == "labels":
+                            invalid_indices = (value < 0).nonzero(as_tuple=True)
+                            print(f"Invalid {key} indices: {invalid_indices}")
                             valid_range = list(range(len(labels)))
                             inputs[key] = torch.clamp(value, min=0, max=max(valid_range))
 
