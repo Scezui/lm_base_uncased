@@ -246,16 +246,18 @@ def train(  # noqa C901
                             invalid_indices = (value == -100).nonzero(as_tuple=True)
                             print(f"Invalid {key} indices: {invalid_indices}")
 
-                            # Remove invalid indices from all tensors
-                            inputs["input_ids"] = torch.index_select(inputs["input_ids"], 0, torch.tensor([idx for idx in range(len(value)) if idx not in invalid_indices]))
-                            inputs["attention_mask"] = torch.index_select(inputs["attention_mask"], 0, torch.tensor([idx for idx in range(len(value)) if idx not in invalid_indices]))
-                            inputs["labels"] = torch.index_select(inputs["labels"], 0, torch.tensor([idx for idx in range(len(value)) if idx not in invalid_indices]))
+                            # Remove invalid indices from the labels tensor
+                            valid_labels = value[value != -100]
+                            inputs["labels"] = valid_labels
+
+                            # Update the other tensors to reflect the changes to the labels tensor
+                            inputs["input_ids"] = torch.index_select(inputs["input_ids"], 0, torch.tensor(valid_labels.index))
+                            inputs["attention_mask"] = torch.index_select(inputs["attention_mask"], 0, torch.tensor(valid_labels.index))
 
                             if "token_type_ids" in inputs:
-                                inputs["token_type_ids"] = torch.index_select(inputs["token_type_ids"], 0, torch.tensor([idx for idx in range(len(value)) if idx not in invalid_indices]))
+                                inputs["token_type_ids"] = torch.index_select(inputs["token_type_ids"], 0, torch.tensor(valid_labels.index))
                             if "bbox" in inputs:
-                                inputs["bbox"] = torch.index_select(inputs["bbox"], 0, torch.tensor([idx for idx in range(len(value)) if idx not in invalid_indices]))
-
+                                inputs["bbox"] = torch.index_select(inputs["bbox"], 0, torch.tensor(valid_labels.index))
 
 
 
