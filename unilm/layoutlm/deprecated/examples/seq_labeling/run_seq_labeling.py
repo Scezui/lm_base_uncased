@@ -259,12 +259,10 @@ def train(  # noqa C901
                             if "bbox" in inputs:
                                 inputs["bbox"] = torch.index_select(inputs["bbox"], 0, torch.tensor(valid_labels.nonzero(as_tuple=False)))
 
-                            # Update the mask tensor to match the shape of the active_labels tensor
-                            valid_mask = inputs["mask"].clone()
-                            valid_mask[valid_mask == 0] = False
+                            # Update the mask tensor to be the same shape as the labels tensor
+                            valid_mask = torch.zeros_like(inputs["labels"])
+                            valid_mask[valid_labels] = 1
                             inputs["mask"] = valid_mask
-
-
 
             except RuntimeError as e:
                 if any(error_msg in str(e) for error_msg in ["indexSelectLargeIndex", "Assertion `srcIndex < srcSelectDimSize` failed."]):
