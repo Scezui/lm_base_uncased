@@ -203,40 +203,58 @@ def train(  # noqa C901
         epoch_iterator = tqdm(
             train_dataloader, desc="Iteration", disable=args.local_rank not in [-1, 0]
         )
+
         for step, batch in enumerate(epoch_iterator):
             model.train()
-            
+
             # Check if the input indices are within range
             if batch[0].size(0) <= 0:
                 continue
-    
-            inputs = {
-                "input_ids": batch[0].to(args.device),
-                "attention_mask": batch[1].to(args.device),
-                "labels": batch[3].to(args.device),
-            }
-            if args.model_type in ["layoutlm"]:
-                inputs["bbox"] = batch[4].to(args.device)
-            inputs["token_type_ids"] = (
-                batch[2].to(args.device) if args.model_type in ["bert", "layoutlm"] else None
-            ) # RoBERTa don"t use segment_ids
-            
+
+            try:
+                inputs = {
+                    "input_ids": batch[0].to(args.device),
+                    "attention_mask": batch[1].to(args.device),
+                    "labels": batch[3].to(args.device),
+                }
+                if args.model_type in ["layoutlm"]:
+                    inputs["bbox"] = batch[4].to(args.device)
+                inputs["token_type_ids"] = (
+                    batch[2].to(args.device) if args.model_type in ["bert", "layoutlm"] else None
+                ) # RoBERTa don"t use segment_ids
                 
-            # Print the minimum and maximum values of each input
-            # print("\nInput IDs - Min:", torch.min(inputs["input_ids"]), "Max:", torch.max(inputs["input_ids"]))
-            print("Attention Mask - Min:", torch.min(inputs["attention_mask"]), "Max:", torch.max(inputs["attention_mask"]))
-            if "token_type_ids" in inputs:
-                print("Token Type IDs - Min:", torch.min(inputs["token_type_ids"]), "Max:", torch.max(inputs["token_type_ids"]))
-            if "bbox" in inputs:
-                print("BBox - Min:", torch.min(inputs["bbox"]), "Max:", torch.max(inputs["bbox"]))
+                # Print the number of output units
+                print("\nNumber of Output Units:", model.num_labels)
+
+                # Print the minimum and maximum values of each input
+                # print("\nInput IDs - \nMin:", torch.min(inputs["input_ids"]), "\nMax:", torch.max(inputs["input_ids"]))
+                # print("Attention Mask - Min:", torch.min(inputs["attention_mask"]), "Max:", torch.max(inputs["attention_mask"]))
+                # if "token_type_ids" in inputs:
+                    # print("Token Type IDs - Min:", torch.min(inputs["token_type_ids"]), "Max:", torch.max(inputs["token_type_ids"]))
+                # if "bbox" in inputs:
+                    # print("BBox - Min:", torch.min(inputs["bbox"]), "Max:", torch.max(inputs["bbox"]))
                 
-            # Check for out-of-range indices
-            for key, value in inputs.items():
-                if len(value) > 0 and value.min() < 0:
-                    print(f"Warning: {key} index out of range: {value.min()}")
-                    continue
-                    
-                    
+                print("\nNum of Labels:", len(labels))
+              
+
+                # Check for out-of-range indices
+                for key, value in inputs.items():
+                    if len(value) > 0 and value.min() < 0:
+                        print(f"Warning: {key} index out of range: {value.min()}")
+                        if key == "labels":
+                            valid_range = list(range(len(labels)))
+                            inputs[key] = torch.clamp(value, min=0, max=max(valid_range))
+
+
+            except RuntimeError as e:
+                if any(error_msg in str(e) for error_msg in ["indexSelectLargeIndex", "Assertion `srcIndex < srcSelectDimSize` failed."]):
+                    print("Error: Assertion failed in CUDA indexing. Skipping batch.")
+                else:
+                    # Handle other runtime errors
+                    print("Error:", e)
+
+
+                            
             outputs = model(**inputs)
             # model outputs are always tuple in pytorch-transformers (see doc)
             loss = outputs[0]

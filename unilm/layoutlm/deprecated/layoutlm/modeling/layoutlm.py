@@ -286,16 +286,16 @@ class LayoutlmForSequenceClassification(BertPreTrainedModel):
         pooled_output = outputs[1]
 
         # Print the minimum and maximum values of each input
-        print("Input IDs - Min:", torch.min(input_ids), "Max:", torch.max(input_ids))
-        print("BBox - Min:", torch.min(bbox), "Max:", torch.max(bbox))
-        if attention_mask is not None:
-            print("Attention Mask - Min:", torch.min(attention_mask), "Max:", torch.max(attention_mask))
-        if token_type_ids is not None:
-            print("Token Type IDs - Min:", torch.min(token_type_ids), "Max:", torch.max(token_type_ids))
-        if position_ids is not None:
-            print("Position IDs - Min:", torch.min(position_ids), "Max:", torch.max(position_ids))
-        if head_mask is not None:
-            print("Head Mask - Min:", torch.min(head_mask), "Max:", torch.max(head_mask))
+        # print("Input IDs - Min:", torch.min(input_ids), "Max:", torch.max(input_ids))
+        # print("BBox - Min:", torch.min(bbox), "Max:", torch.max(bbox))
+        # if attention_mask is not None:
+            # print("Attention Mask - Min:", torch.min(attention_mask), "Max:", torch.max(attention_mask))
+        # if token_type_ids is not None:
+            # print("Token Type IDs - Min:", torch.min(token_type_ids), "Max:", torch.max(token_type_ids))
+        # if position_ids is not None:
+            # print("Position IDs - Min:", torch.min(position_ids), "Max:", torch.max(position_ids))
+        # if head_mask is not None:
+            # print("Head Mask - Min:", torch.min(head_mask), "Max:", torch.max(head_mask))
 
         pooled_output = self.dropout(pooled_output)
         logits = self.classifier(pooled_output)
@@ -304,6 +304,8 @@ class LayoutlmForSequenceClassification(BertPreTrainedModel):
         ]  # add hidden states and attention if they are here
 
         if labels is not None:
+            # Apply clipping to the labels tensor
+            labels = torch.clamp(labels, 0, self.num_labels - 1)
             if self.num_labels == 1:
                 #  We are doing regression
                 loss_fct = MSELoss()
