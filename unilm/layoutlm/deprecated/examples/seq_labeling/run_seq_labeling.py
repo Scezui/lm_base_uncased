@@ -242,10 +242,20 @@ def train(  # noqa C901
                     if len(value) > 0 and value.min() < 0:
                         print(f"Warning: {key} index out of range: {value.min()}")
                         if key == "labels":
-                            invalid_indices = (value < 0).nonzero(as_tuple=True)
+                            # Find indices with value -100
+                            invalid_indices = (value == -100).nonzero(as_tuple=True)
                             print(f"Invalid {key} indices: {invalid_indices}")
-                            valid_labels = value[value >= 0]  # Filter out the labels with values >= 0
-                            inputs[key] = torch.clamp(valid_labels, min=0, max=max(valid_range))
+
+                            # Remove invalid indices from all tensors
+                            inputs["input_ids"] = torch.index_select(inputs["input_ids"], 0, torch.tensor([idx for idx in range(len(value)) if idx not in invalid_indices]))
+                            inputs["attention_mask"] = torch.index_select(inputs["attention_mask"], 0, torch.tensor([idx for idx in range(len(value)) if idx not in invalid_indices]))
+                            inputs["labels"] = torch.index_select(inputs["labels"], 0, torch.tensor([idx for idx in range(len(value)) if idx not in invalid_indices]))
+
+                            if "token_type_ids" in inputs:
+                                inputs["token_type_ids"] = torch.index_select(inputs["token_type_ids"], 0, torch.tensor([idx for idx in range(len(value)) if idx not in invalid_indices]))
+                            if "bbox" in inputs:
+                                inputs["bbox"] = torch.index_select(inputs["bbox"], 0, torch.tensor([idx for idx in range(len(value)) if idx not in invalid_indices]))
+
 
 
 
