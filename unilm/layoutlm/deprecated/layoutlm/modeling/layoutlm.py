@@ -314,5 +314,23 @@ class LayoutlmForSequenceClassification(BertPreTrainedModel):
                 loss_fct = CrossEntropyLoss()
                 loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
             outputs = (loss,) + outputs
+            
+            
+            
+            
+    def check_index(index):
+        """Checks if the given index is within the valid range."""
+        max_index = position_embeddings.size(0) - 1
+        if index < 0 or index > max_index:
+            raise ValueError(f"Index {index} is out of range.")
+
+
+        # Get the two indices that are out of range.
+        indices = [3, 511]
+
+        # Check if the indices are within the valid range.
+        for index in indices:
+            check_index(index)
+
 
         return outputs  # (loss), logits, (hidden_states), (attentions)
