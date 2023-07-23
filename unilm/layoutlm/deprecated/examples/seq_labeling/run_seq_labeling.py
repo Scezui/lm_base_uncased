@@ -252,24 +252,20 @@ def train(  # noqa C901
                             # Find indices with value -100
                             invalid_indices = (value == -100).nonzero(as_tuple=False)
                             print_invalid_indices(invalid_indices)
+                            
+                def check_index(index):
+                    """Checks if the given index is within the valid range."""
+                    max_index = position_embeddings.size(0) - 1
+                    if index < 0 or index > max_index:
+                        raise ValueError(f"Index {index} is out of range.")
 
-                            # # Remove invalid indices from the labels tensor
-                            # valid_labels = value[value != -100]
-                            # inputs["labels"] = valid_labels
 
-                            # # Update the other tensors to reflect the changes to the labels tensor
-                            # inputs["input_ids"] = torch.index_select(inputs["input_ids"], 0, torch.tensor(valid_labels.nonzero(as_tuple=False)))
-                            # inputs["attention_mask"] = torch.index_select(inputs["attention_mask"], 0, torch.tensor(valid_labels.nonzero(as_tuple=False)))
+                # Get the two indices that are out of range.
+                indices = [3, 511]
 
-                            # if "token_type_ids" in inputs:
-                                # inputs["token_type_ids"] = torch.index_select(inputs["token_type_ids"], 0, torch.tensor(valid_labels.nonzero(as_tuple=False)))
-                            # if "bbox" in inputs:
-                                # inputs["bbox"] = torch.index_select(inputs["bbox"], 0, torch.tensor(valid_labels.nonzero(as_tuple=False)))
-
-                            # # Update the mask tensor to be the same shape as the labels tensor
-                            # valid_mask = torch.zeros_like(inputs["labels"]).bool()
-                            # valid_mask[valid_labels] = True
-                            # inputs["mask"] = valid_mask
+                # Check if the indices are within the valid range.
+                for index in indices:
+                    check_index(index)
 
             except RuntimeError as e:
                 if any(error_msg in str(e) for error_msg in ["indexSelectLargeIndex", "Assertion `srcIndex < srcSelectDimSize` failed."]):
