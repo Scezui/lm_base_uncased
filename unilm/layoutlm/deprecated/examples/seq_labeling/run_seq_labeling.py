@@ -237,6 +237,13 @@ def train(  # noqa C901
                 print("\nNum of Labels:", len(labels))
               
 
+                def print_invalid_indices(invalid_indices):
+                    """Prints the whole invalid indices without truncating."""
+                    print(f"Invalid {key} indices:")
+                    for index in invalid_indices:
+                        print(index)
+
+
                 # Check for out-of-range indices
                 for key, value in inputs.items():
                     if len(value) > 0 and value.min() < 0:
@@ -244,7 +251,7 @@ def train(  # noqa C901
                         if key == "labels":
                             # Find indices with value -100
                             invalid_indices = (value == -100).nonzero(as_tuple=False)
-                            print(f"Invalid {key} indices: {invalid_indices}")
+                            print_invalid_indices(invalid_indices)
 
                             # # Remove invalid indices from the labels tensor
                             # valid_labels = value[value != -100]
