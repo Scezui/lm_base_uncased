@@ -267,9 +267,11 @@ def train(  # noqa C901
                         clamped_indices = torch.clamp(value, 0, value.size(0) - 1)
                         inputs[key] = clamped_indices
             except RuntimeError as e:
-                if any(error_msg in str(e) for error_msg in ["indexSelectLargeIndex", "Assertion `srcIndex < src
-
-
+                if any(error_msg in str(e) for error_msg in ["indexSelectLargeIndex", "Assertion `srcIndex < srcSelectDimSize` failed."]):
+                    print("Error: Assertion failed in CUDA indexing. Skipping batch.")
+                else:
+                    # Handle other runtime errors
+                    print("Error:", e)
 
                             
             outputs = model(**inputs)
