@@ -222,7 +222,7 @@ def train(  # noqa C901
                 inputs["token_type_ids"] = (
                     batch[2].to(args.device) if args.model_type in ["bert", "layoutlm"] else None
                 ) # RoBERTa don"t use segment_ids
-                
+
                 # Print the number of output units
                 print("\nNumber of Output Units:", model.num_labels)
 
@@ -233,9 +233,8 @@ def train(  # noqa C901
                     # print("Token Type IDs - Min:", torch.min(inputs["token_type_ids"]), "Max:", torch.max(inputs["token_type_ids"]))
                 # if "bbox" in inputs:
                     # print("BBox - Min:", torch.min(inputs["bbox"]), "Max:", torch.max(inputs["bbox"]))
-                
+
                 print("\nNum of Labels:", len(labels))
-              
 
                 # Check for out-of-range indices
                 for key, value in inputs.items():
@@ -264,12 +263,12 @@ def train(  # noqa C901
                             # valid_mask[valid_labels] = True
                             # inputs["mask"] = valid_mask
 
+                        # Clamp the indices to be within range
+                        clamped_indices = torch.clamp(value, 0, value.size(0) - 1)
+                        inputs[key] = clamped_indices
             except RuntimeError as e:
-                if any(error_msg in str(e) for error_msg in ["indexSelectLargeIndex", "Assertion `srcIndex < srcSelectDimSize` failed."]):
-                    print("Error: Assertion failed in CUDA indexing. Skipping batch.")
-                else:
-                    # Handle other runtime errors
-                    print("Error:", e)
+                if any(error_msg in str(e) for error_msg in ["indexSelectLargeIndex", "Assertion `srcIndex < src
+
 
 
                             
