@@ -284,6 +284,8 @@ class LayoutlmForSequenceClassification(BertPreTrainedModel):
         )
 
         pooled_output = outputs[1]
+        
+        print("Embedding Layer - Min:", torch.min(inputs_embeds), "Max:", torch.max(inputs_embeds))
 
         # Print the minimum and maximum values of each input
         # print("Input IDs - Min:", torch.min(input_ids), "Max:", torch.max(input_ids))
