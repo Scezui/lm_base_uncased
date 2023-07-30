@@ -236,7 +236,6 @@ def train(  # noqa C901
 
                 print("\nNum of Labels:", len(labels))
 
-                # Check for out-of-range indices
                 for key, value in inputs.items():
                     if len(value) > 0 and value.min() < 0:
                         print(f"Warning: {key} index out of range: {value.min()}")
@@ -244,6 +243,7 @@ def train(  # noqa C901
                             # Find indices with value -100
                             invalid_indices = (value == -100).nonzero(as_tuple=False)
                             print(f"Invalid {key} indices: {invalid_indices}")
+                            print(f"Invalid {key} indices (no truncation): {invalid_indices.tolist()}")
 
                             # # Remove invalid indices from the labels tensor
                             # valid_labels = value[value != -100]
@@ -263,9 +263,10 @@ def train(  # noqa C901
                             # valid_mask[valid_labels] = True
                             # inputs["mask"] = valid_mask
 
-                        # Clamp the indices to be within range
-                        clamped_indices = torch.clamp(value, 0, value.size(0) - 1)
-                        inputs[key] = clamped_indices
+                            # Clamp the indices to be within range
+                            clamped_indices = torch.clamp(value, 0, value.size(0) - 1)
+                            inputs[key] = clamped_indices
+                        
             except RuntimeError as e:
                 if any(error_msg in str(e) for error_msg in ["indexSelectLargeIndex", "Assertion `srcIndex < srcSelectDimSize` failed."]):
                     print("Error: Assertion failed in CUDA indexing. Skipping batch.")
