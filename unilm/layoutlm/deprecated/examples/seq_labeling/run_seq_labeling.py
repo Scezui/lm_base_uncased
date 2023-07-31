@@ -240,10 +240,12 @@ def train(  # noqa C901
                     if len(value) > 0 and value.min() < 0:
                         print(f"Warning: {key} index out of range: {value.min()}")
                         if key == "labels":
-                            # Find indices with value -100
-                            invalid_indices = (value == -100).nonzero(as_tuple=False)
-                            print(f"Invalid {key} indices: {invalid_indices}")
-                            print(f"Invalid {key} indices (no truncation): {invalid_indices.tolist()}")
+                            indices = [i for i, v in enumerate(value) if v == -100]
+                            print(f"Indices with -100 values: {indices}")
+                            # # Find indices with value -100
+                            # invalid_indices = (value == -100).nonzero(as_tuple=False)
+                            # print(f"Invalid {key} indices: {invalid_indices}")
+                            # print(f"Invalid {key} indices (no truncation): {invalid_indices.tolist()}")
 
                             # # Remove invalid indices from the labels tensor
                             # valid_labels = value[value != -100]
