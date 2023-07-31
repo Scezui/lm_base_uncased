@@ -232,10 +232,12 @@ def train(  # noqa C901
 
             # print the labels tensor
             print("\nLabels Tensor:", inputs["labels"])
-            labels2 = inputs["labels"][inputs["labels"] != -100]
+
+            # filter out padding positions from the labels tensor
+            labels = inputs["labels"][inputs["labels"] != -100]
 
             # print the actual labels being predicted
-            print("\nActual Labels:", labels2)
+            print("\nActual Labels:", labels)
 
             for key, value in inputs.items():
                 if len(value) > 0 and value.min() < 0:
@@ -247,7 +249,8 @@ def train(  # noqa C901
             # filter out padding positions from the labels tensor
             inputs["labels"] = inputs["labels"][mask]
 
-                        
+            # pass the updated inputs dictionary to the model
+            outputs = model(**inputs)
             
             outputs = model(**inputs)
             # model outputs are always tuple in pytorch-transformers (see doc)
