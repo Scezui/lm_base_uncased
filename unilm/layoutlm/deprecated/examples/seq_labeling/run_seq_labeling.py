@@ -243,7 +243,7 @@ def train(  # noqa C901
                             # Find indices with value -100
                             invalid_indices = (value == -100).nonzero(as_tuple=False)
                             print(f"Invalid {key} indices: {invalid_indices}")
-                            print(f"Invalid {key} indices (no truncation): {invalid_indices.tolist()}")
+                            # print(f"Invalid {key} indices (no truncation): {invalid_indices.tolist()}")
 
                             # # Remove invalid indices from the labels tensor
                             # valid_labels = value[value != -100]
