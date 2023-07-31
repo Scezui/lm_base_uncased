@@ -233,6 +233,8 @@ def train(  # noqa C901
                     if len(value) > 0 and value.min() < 0:
                         print(f"Warning: {key} index out of range: {value.min()}")
                         print(f"Value: {value}")
+                        # Omit the out of range indices
+                        inputs[key] = value.filter(lambda x: x >= 0)
 
           
                         
