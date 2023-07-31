@@ -234,7 +234,7 @@ def train(  # noqa C901
                         print(f"Warning: {key} index out of range: {value.min()}")
                         print(f"Value: {value}")
                         # Omit the out of range indices
-                        inputs[key] = value.filter(lambda x: x >= 0)
+                        inputs[key] = torch.where(value >= 0, value, torch.zeros_like(value))
 
           
                         
