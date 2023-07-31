@@ -211,66 +211,43 @@ def train(  # noqa C901
             if batch[0].size(0) <= 0:
                 continue
 
-            try:
-                inputs = {
-                    "input_ids": batch[0].to(args.device),
-                    "attention_mask": batch[1].to(args.device),
-                    "labels": batch[3].to(args.device),
-                }
-                if args.model_type in ["layoutlm"]:
-                    inputs["bbox"] = batch[4].to(args.device)
-                inputs["token_type_ids"] = (
-                    batch[2].to(args.device) if args.model_type in ["bert", "layoutlm"] else None
-                ) # RoBERTa don"t use segment_ids
+            inputs = {
+                "input_ids": batch[0].to(args.device),
+                "attention_mask": batch[1].to(args.device),
+                "labels": batch[3].to(args.device),
+            }
+            if args.model_type in ["layoutlm"]:
+                inputs["bbox"] = batch[4].to(args.device)
+            inputs["token_type_ids"] = (
+                batch[2].to(args.device) if args.model_type in ["bert", "layoutlm"] else None
+            )  # RoBERTa don"t use segment_ids
 
-                # Print the number of output units
-                print("\nNumber of Output Units:", model.num_labels)
+            # Print the number of output units
+            print("\nNumber of Output Units:", model.num_labels)
 
+            print("\nNum of Labels:", len(inputs["labels"]))
 
-                print("\nNum of Labels:", len(labels))
-                
-                # set the print options to print all elements of the tensor
-                torch.set_printoptions(threshold=100000)
+            # set the print options to print all elements of the tensor
+            torch.set_printoptions(threshold=100000)
 
-                # print the labels tensor
-                print("\nLabels Tensor:", inputs["labels"])
-                labels2 = labels[labels != -100]
+            # print the labels tensor
+            print("\nLabels Tensor:", inputs["labels"])
+            labels2 = inputs["labels"][inputs["labels"] != -100]
 
-                # print the actual labels being predicted
-                print("\nActual Labels:", labels2)
+            # print the actual labels being predicted
+            print("\nActual Labels:", labels2)
 
-                for key, value in inputs.items():
-                    if len(value) > 0 and value.min() < 0:
-                        print(f"Warning: {key} index out of range: {value.min()}")
+            for key, value in inputs.items():
+                if len(value) > 0 and value.min() < 0:
+                    print(f"Warning: {key} index out of range: {value.min()}")
 
-          
-                        
-            except RuntimeError as e:
-                if any(error_msg in str(e) for error_msg in ["indexSelectLargeIndex", "Assertion `srcIndex < srcSelectDimSize` failed."]):
-                    print("Error: Assertion failed in CUDA indexing. Skipping batch.")
-                else:
-                    # Handle other runtime errors
-                    print("Error:", e)
-
-            
-            
             # create a mask for the padding positions
             mask = inputs["labels"] != -100
 
             # filter out padding positions from the labels tensor
-            labels = inputs["labels"][mask]
+            inputs["labels"] = inputs["labels"][mask]
 
-            # create a new inputs dictionary with the filtered labels tensor
-            new_inputs = {
-                "input_ids": inputs["input_ids"],
-                "attention_mask": inputs["attention_mask"],
-                "labels": labels,
-                "token_type_ids": inputs["token_type_ids"] if "token_type_ids" in inputs else None,
-                "bbox": inputs["bbox"] if "bbox" in inputs else None,
-}
-            
-            
-            
+                        
             
             outputs = model(**inputs)
             # model outputs are always tuple in pytorch-transformers (see doc)
