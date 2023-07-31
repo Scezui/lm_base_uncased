@@ -228,14 +228,13 @@ def train(  # noqa C901
 
 
                 print("\nNum of Labels:", len(labels))
+                
+                print("\nLabels Tensor:", inputs["labels"])
 
 
                 for key, value in inputs.items():
                     if len(value) > 0 and value.min() < 0:
                         print(f"Warning: {key} index out of range: {value.min()}")
-                        for index, item in enumerate(value):
-                            if item < 0:
-                                print(f"    {index}: {item}")
 
           
                         
