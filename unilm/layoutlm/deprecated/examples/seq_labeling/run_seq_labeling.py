@@ -236,18 +236,12 @@ def train(  # noqa C901
             if inputs["input_ids"].size(0) <= 0:
                 continue
 
-            # Print the number of output units
-            print("\nNumber of Output Units:", model.num_labels)
-            print("\nNum of Labels:", len(inputs["labels"]))
-
-            # set the print options to print all elements of the tensor
-            torch.set_printoptions(threshold=100000)
-            # print the labels tensor
-            print("\nLabels Tensor:", inputs["labels"])
-
-            # print the actual labels being predicted
-            print("\nActual Labels:", labels)
-            
+            # Debug statements
+            print("\nBatch:", step)
+            print("Input IDs Shape:", inputs["input_ids"].shape)
+            print("BBox Shape:", inputs.get("bbox", None))
+            print("Labels Shape:", inputs["labels"].shape)
+                    
             for key, value in inputs.items():
                 if len(value) > 0 and value.min() < 0:
                     print(f"Warning: {key} index out of range: {value.min()}")
