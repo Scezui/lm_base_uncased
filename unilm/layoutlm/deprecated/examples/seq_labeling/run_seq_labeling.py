@@ -252,7 +252,26 @@ def train(  # noqa C901
                     # Handle other runtime errors
                     print("Error:", e)
 
-                            
+            
+            
+            # create a mask for the padding positions
+            mask = inputs["labels"] != -100
+
+            # filter out padding positions from the labels tensor
+            labels = inputs["labels"][mask]
+
+            # create a new inputs dictionary with the filtered labels tensor
+            new_inputs = {
+                "input_ids": inputs["input_ids"],
+                "attention_mask": inputs["attention_mask"],
+                "labels": labels,
+                "token_type_ids": inputs["token_type_ids"] if "token_type_ids" in inputs else None,
+                "bbox": inputs["bbox"] if "bbox" in inputs else None,
+}
+            
+            
+            
+            
             outputs = model(**inputs)
             # model outputs are always tuple in pytorch-transformers (see doc)
             loss = outputs[0]
