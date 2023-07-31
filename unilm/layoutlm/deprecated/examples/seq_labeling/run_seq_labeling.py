@@ -226,49 +226,15 @@ def train(  # noqa C901
                 # Print the number of output units
                 print("\nNumber of Output Units:", model.num_labels)
 
-                # Print the minimum and maximum values of each input
-                # print("\nInput IDs - \nMin:", torch.min(inputs["input_ids"]), "\nMax:", torch.max(inputs["input_ids"]))
-                # print("Attention Mask - Min:", torch.min(inputs["attention_mask"]), "Max:", torch.max(inputs["attention_mask"]))
-                # if "token_type_ids" in inputs:
-                    # print("Token Type IDs - Min:", torch.min(inputs["token_type_ids"]), "Max:", torch.max(inputs["token_type_ids"]))
-                # if "bbox" in inputs:
-                    # print("BBox - Min:", torch.min(inputs["bbox"]), "Max:", torch.max(inputs["bbox"]))
 
                 print("\nNum of Labels:", len(labels))
 
                 for key, value in inputs.items():
-                    if len(value) > 0 and np.min(value) < 0:
-                        print(f"Warning: {key} index out of range: {np.min(value)}")
-                        
-                        if key == "labels":
-                            indices = np.where(value == -100)[0]
-                            print(f"Indices with -100 values: {indices}")
-                            # # Find indices with value -100
-                            # invalid_indices = (value == -100).nonzero(as_tuple=False)
-                            # print(f"Invalid {key} indices: {invalid_indices}")
-                            # print(f"Invalid {key} indices (no truncation): {invalid_indices.tolist()}")
+                    if len(value) > 0 and value.min() < 0:
+                        print(f"Warning: {key} index out of range: {value.min()}")
+                        print(f"Value: {value}")
 
-                            # # Remove invalid indices from the labels tensor
-                            # valid_labels = value[value != -100]
-                            # inputs["labels"] = valid_labels
-
-                            # # Update the other tensors to reflect the changes to the labels tensor
-                            # inputs["input_ids"] = torch.index_select(inputs["input_ids"], 0, torch.tensor(valid_labels.nonzero(as_tuple=False)))
-                            # inputs["attention_mask"] = torch.index_select(inputs["attention_mask"], 0, torch.tensor(valid_labels.nonzero(as_tuple=False)))
-
-                            # if "token_type_ids" in inputs:
-                                # inputs["token_type_ids"] = torch.index_select(inputs["token_type_ids"], 0, torch.tensor(valid_labels.nonzero(as_tuple=False)))
-                            # if "bbox" in inputs:
-                                # inputs["bbox"] = torch.index_select(inputs["bbox"], 0, torch.tensor(valid_labels.nonzero(as_tuple=False)))
-
-                            # # Update the mask tensor to be the same shape as the labels tensor
-                            # valid_mask = torch.zeros_like(inputs["labels"]).bool()
-                            # valid_mask[valid_labels] = True
-                            # inputs["mask"] = valid_mask
-
-                            # Clamp the indices to be within range
-                            clamped_indices = torch.clamp(value, 0, value.size(0) - 1)
-                            inputs[key] = clamped_indices
+          
                         
             except RuntimeError as e:
                 if any(error_msg in str(e) for error_msg in ["indexSelectLargeIndex", "Assertion `srcIndex < srcSelectDimSize` failed."]):
