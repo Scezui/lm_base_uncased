@@ -228,23 +228,16 @@ def train(  # noqa C901
 
 
                 print("\nNum of Labels:", len(labels))
-                
-                
-                def print_value(value):
-                    """Prints the value without truncation."""
-                    max_width = 80
-                    value_str = str(value)
-                    if len(value_str) > max_width:
-                        value_str = value_str[:max_width - 3] + "..." + "\n" + value_str[max_width - 3:]
-                    return value_str
 
 
                 for key, value in inputs.items():
                     if len(value) > 0 and value.min() < 0:
                         print(f"Warning: {key} index out of range: {value.min()}")
-                        print(f"Value: {print_value(value)}")
-                        # Omit the out of range indices
-                        inputs[key] = torch.where(value >= 0, value, torch.zeros_like(value))
+                        for index, item in enumerate(value):
+                            if item < 0:
+                                print(f"    {index}: {item}")
+
+          
                         
             except RuntimeError as e:
                 if any(error_msg in str(e) for error_msg in ["indexSelectLargeIndex", "Assertion `srcIndex < srcSelectDimSize` failed."]):
