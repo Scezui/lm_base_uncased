@@ -234,6 +234,10 @@ def train(  # noqa C901
 
                 # print the labels tensor
                 print("\nLabels Tensor:", inputs["labels"])
+                labels2 = labels[labels != -100]
+
+                # print the actual labels being predicted
+                print("\nActual Labels:", labels2)
 
                 for key, value in inputs.items():
                     if len(value) > 0 and value.min() < 0:
