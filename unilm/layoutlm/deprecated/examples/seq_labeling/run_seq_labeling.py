@@ -232,6 +232,10 @@ def train(  # noqa C901
             if args.model_type in ["layoutlm"]:
                 inputs["bbox"] = inputs["bbox"][mask]
 
+            # Check if the input_ids tensor is empty after removing padding values
+            if inputs["input_ids"].size(0) <= 0:
+                continue
+
             # Print the number of output units
             print("\nNumber of Output Units:", model.num_labels)
             print("\nNum of Labels:", len(inputs["labels"]))
@@ -243,7 +247,6 @@ def train(  # noqa C901
 
             # print the actual labels being predicted
             print("\nActual Labels:", labels)
-            
             
             for key, value in inputs.items():
                 if len(value) > 0 and value.min() < 0:
