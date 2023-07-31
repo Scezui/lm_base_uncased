@@ -230,7 +230,7 @@ def train(  # noqa C901
                 print("\nNum of Labels:", len(labels))
                 
                 # set the print options to print all elements of the tensor
-                torch.set_printoptions(threshold=torch.inf)
+                torch.set_printoptions(threshold=100000)
 
                 # print the labels tensor
                 print("\nLabels Tensor:", inputs["labels"])
