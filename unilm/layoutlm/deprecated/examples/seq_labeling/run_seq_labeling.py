@@ -229,8 +229,11 @@ def train(  # noqa C901
 
                 print("\nNum of Labels:", len(labels))
                 
-                print("\nLabels Tensor:", inputs["labels"])
+                # set the print options to print all elements of the tensor
+                torch.set_printoptions(threshold=torch.inf)
 
+                # print the labels tensor
+                print("\nLabels Tensor:", inputs["labels"])
 
                 for key, value in inputs.items():
                     if len(value) > 0 and value.min() < 0:
