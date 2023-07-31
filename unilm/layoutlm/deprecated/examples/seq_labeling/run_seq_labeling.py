@@ -237,10 +237,11 @@ def train(  # noqa C901
                 print("\nNum of Labels:", len(labels))
 
                 for key, value in inputs.items():
-                    if len(value) > 0 and value.min() < 0:
-                        print(f"Warning: {key} index out of range: {value.min()}")
+                    if len(value) > 0 and np.min(value) < 0:
+                        print(f"Warning: {key} index out of range: {np.min(value)}")
+                        
                         if key == "labels":
-                            indices = [i for i, v in enumerate(value) if v == -100]
+                            indices = np.where(value == -100)[0]
                             print(f"Indices with -100 values: {indices}")
                             # # Find indices with value -100
                             # invalid_indices = (value == -100).nonzero(as_tuple=False)
