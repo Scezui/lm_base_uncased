@@ -89,7 +89,7 @@ class LayoutlmEmbeddings(nn.Module):
         # print(f"attention_mask shape: {attention_mask.shape}")
         print(f"token_type_ids shape: {token_type_ids.shape}")
         print(f"position_ids shape: {position_ids.shape}")
-        print(f"inputs_embeds shape: {inputs_embeds.shape}")
+        print(f"inputs_embeds shape: {inputs_embeds.shape if inputs_embeds is not None else None}")
         
 
 
