@@ -86,7 +86,7 @@ class LayoutlmEmbeddings(nn.Module):
         # Print input tensor shapes
         print(f"input_ids shape: {input_ids.shape}")
         print(f"bbox shape: {bbox.shape}")
-        print(f"attention_mask shape: {attention_mask.shape}")
+        # print(f"attention_mask shape: {attention_mask.shape}")
         print(f"token_type_ids shape: {token_type_ids.shape}")
         print(f"position_ids shape: {position_ids.shape}")
         print(f"inputs_embeds shape: {inputs_embeds.shape}")
