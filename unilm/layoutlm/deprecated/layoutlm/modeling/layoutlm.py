@@ -83,6 +83,14 @@ class LayoutlmEmbeddings(nn.Module):
         # print("Input tensor shape:", input_ids.shape)  # Print the shape of the input tensor
         print("Position embeddings size:", self.w_position_embeddings.weight.size())
         print("Maximum index value:", torch.max(input_ids))
+        # Print input tensor shapes
+        print(f"input_ids shape: {input_ids.shape}")
+        print(f"bbox shape: {bbox.shape}")
+        print(f"attention_mask shape: {attention_mask.shape}")
+        print(f"token_type_ids shape: {token_type_ids.shape}")
+        print(f"position_ids shape: {position_ids.shape}")
+        print(f"inputs_embeds shape: {inputs_embeds.shape}")
+        
 
 
         w_position_embeddings = self.w_position_embeddings(
@@ -306,13 +314,6 @@ class LayoutlmForSequenceClassification(BertPreTrainedModel):
                     loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
                 outputs = (loss,) + outputs
              
-                        # Print input tensor shapes
-            print(f"input_ids shape: {input_ids.shape}")
-            print(f"bbox shape: {bbox.shape}")
-            print(f"attention_mask shape: {attention_mask.shape}")
-            print(f"token_type_ids shape: {token_type_ids.shape}")
-            print(f"position_ids shape: {position_ids.shape}")
-            print(f"inputs_embeds shape: {inputs_embeds.shape}")
-            
+
             return outputs  # (loss), logits, (hidden_states), (attentions)
 
