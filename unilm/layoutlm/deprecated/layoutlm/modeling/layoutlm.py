@@ -285,9 +285,11 @@ class LayoutlmForSequenceClassification(BertPreTrainedModel):
 
         pooled_output = outputs[1]
         
-        print("Embedding Layer -" , "Max:", torch.max(inputs_embeds))
 
         # Print the minimum and maximum values of each input
+        print("Embedding Layer - Min:", torch.min(inputs_embeds))
+        print("Embedding Layer - Max:", torch.max(inputs_embeds))
+        
         print("Input IDs - Min:", torch.min(input_ids), "Max:", torch.max(input_ids))
         print("BBox - Min:", torch.min(bbox), "Max:", torch.max(bbox))
         if attention_mask is not None:
