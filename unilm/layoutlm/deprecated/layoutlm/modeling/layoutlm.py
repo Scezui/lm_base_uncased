@@ -274,22 +274,7 @@ class LayoutlmForSequenceClassification(BertPreTrainedModel):
         labels=None,
     ):
 
-        outputs = self.bert(
-            input_ids=input_ids,
-            bbox=bbox,
-            attention_mask=attention_mask,
-            token_type_ids=token_type_ids,
-            position_ids=position_ids,
-            head_mask=head_mask,
-        )
-
-        pooled_output = outputs[1]
-        
-
-        # Corrected code to print minimum and maximum values of the embedding layer
-        print("Embedding Layer - Min:", torch.min(input_ids))
-        print("Embedding Layer - Max:", torch.max(input_ids))
-        
+        # Print the minimum and maximum values of each input
         print("Input IDs - Min:", torch.min(input_ids), "Max:", torch.max(input_ids))
         print("BBox - Min:", torch.min(bbox), "Max:", torch.max(bbox))
         if attention_mask is not None:
@@ -300,6 +285,15 @@ class LayoutlmForSequenceClassification(BertPreTrainedModel):
             print("Position IDs - Min:", torch.min(position_ids), "Max:", torch.max(position_ids))
         if head_mask is not None:
             print("Head Mask - Min:", torch.min(head_mask), "Max:", torch.max(head_mask))
+
+        outputs = self.bert(
+            input_ids=input_ids,
+            bbox=bbox,
+            attention_mask=attention_mask,
+            token_type_ids=token_type_ids,
+            position_ids=position_ids,
+            head_mask=head_mask,
+    )
 
         pooled_output = self.dropout(pooled_output)
         logits = self.classifier(pooled_output)
