@@ -237,11 +237,20 @@ def train(  # noqa C901
                 continue
 
             # Debug statements
-            print("\nBatch:", step)
-            print("Input IDs Shape:", inputs["input_ids"].shape)
-            print("BBox Shape:", inputs.get("bbox", None))
-            print("Labels Shape:", inputs["labels"].shape)
-                    
+            # Corrected code to print minimum and maximum values of the embedding layer
+            print("Embedding Layer - Min:", torch.min(input_ids))
+            print("Embedding Layer - Max:", torch.max(input_ids))
+            print("Input IDs - Min:", torch.min(input_ids), "Max:", torch.max(input_ids))
+            print("BBox - Min:", torch.min(bbox), "Max:", torch.max(bbox))
+            if attention_mask is not None:
+                print("Attention Mask - Min:", torch.min(attention_mask), "Max:", torch.max(attention_mask))
+            if token_type_ids is not None:
+                print("Token Type IDs - Min:", torch.min(token_type_ids), "Max:", torch.max(token_type_ids))
+            if position_ids is not None:
+                print("Position IDs - Min:", torch.min(position_ids), "Max:", torch.max(position_ids))
+            if head_mask is not None:
+                print("Head Mask - Min:", torch.min(head_mask), "Max:", torch.max(head_mask))
+
             for key, value in inputs.items():
                 if len(value) > 0 and value.min() < 0:
                     print(f"Warning: {key} index out of range: {value.min()}")
