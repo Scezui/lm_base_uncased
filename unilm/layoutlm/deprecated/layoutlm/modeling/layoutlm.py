@@ -263,55 +263,53 @@ class LayoutlmForSequenceClassification(BertPreTrainedModel):
         self.init_weights()
 
     def forward(
-        self,
-        input_ids,
-        bbox,
-        attention_mask=None,
-        token_type_ids=None,
-        position_ids=None,
-        head_mask=None,
-        inputs_embeds=None,
-        labels=None,
-    ):
+            self,
+            input_ids,
+            bbox,
+            attention_mask=None,
+            token_type_ids=None,
+            position_ids=None,
+            head_mask=None,
+            inputs_embeds=None,
+            labels=None,
+        ):
+            # Print input tensor shapes
+            print(f"input_ids shape: {input_ids.shape}")
+            print(f"bbox shape: {bbox.shape}")
+            print(f"attention_mask shape: {attention_mask.shape}")
+            print(f"token_type_ids shape: {token_type_ids.shape}")
+            print(f"position_ids shape: {position_ids.shape}")
+            print(f"inputs_embeds shape: {inputs_embeds.shape}")
 
-        # Print the minimum and maximum values of each input
-        print("Input IDs - Min:", torch.min(input_ids), "Max:", torch.max(input_ids))
-        print("BBox - Min:", torch.min(bbox), "Max:", torch.max(bbox))
-        if attention_mask is not None:
-            print("Attention Mask - Min:", torch.min(attention_mask), "Max:", torch.max(attention_mask))
-        if token_type_ids is not None:
-            print("Token Type IDs - Min:", torch.min(token_type_ids), "Max:", torch.max(token_type_ids))
-        if position_ids is not None:
-            print("Position IDs - Min:", torch.min(position_ids), "Max:", torch.max(position_ids))
-        if head_mask is not None:
-            print("Head Mask - Min:", torch.min(head_mask), "Max:", torch.max(head_mask))
+            outputs = self.bert(
+                input_ids=input_ids,
+                bbox=bbox,
+                attention_mask=attention_mask,
+                token_type_ids=token_type_ids,
+                position_ids=position_ids,
+                head_mask=head_mask,
+            )
 
-        outputs = self.bert(
-            input_ids=input_ids,
-            bbox=bbox,
-            attention_mask=attention_mask,
-            token_type_ids=token_type_ids,
-            position_ids=position_ids,
-            head_mask=head_mask,
-    )
+            pooled_output = outputs[1]
 
-        pooled_output = self.dropout(pooled_output)
-        logits = self.classifier(pooled_output)
-        outputs = (logits,) + outputs[
-            2:
-        ]  # add hidden states and attention if they are here
+            pooled_output = self.dropout(pooled_output)
+            logits = self.classifier(pooled_output)
 
-        if labels is not None:
-            # Apply clipping to the labels tensor
-            labels = torch.clamp(labels, 0, self.num_labels - 1)
-            if self.num_labels == 1:
-                #  We are doing regression
-                loss_fct = MSELoss()
-                loss = loss_fct(logits.view(-1), labels.view(-1))
-            else:
-                loss_fct = CrossEntropyLoss()
-                loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
-            outputs = (loss,) + outputs
-        
-
-        return outputs  # (loss), logits, (hidden_states), (attentions)
+            # Print output tensor shapes
+            print(f"logits shape: {logits.shape}")
+            print(f"outputs shape: {outputs[2].shape}")
+            print(f"attentions shape: {outputs[3].shape}")
+            
+            if labels is not None:
+                # Apply clipping to the labels tensor
+                labels = torch.clamp(labels, 0, self.num_labels - 1)
+                if self.num_labels == 1:
+                    #  We are doing regression
+                    loss_fct = MSELoss()
+                    loss = loss_fct(logits.view(-1), labels.view(-1))
+                else:
+                    loss_fct = CrossEntropyLoss()
+                    loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
+                outputs = (loss,) + outputs
+            
+            return outputs  # (loss), logits, (hidden_states), (attentions)
