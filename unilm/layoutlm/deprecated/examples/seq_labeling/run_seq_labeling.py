@@ -222,15 +222,15 @@ def train(  # noqa C901
                 batch[2].to(args.device) if args.model_type in ["bert", "layoutlm"] else None
             )  # RoBERTa don"t use segment_ids
 
-            # Remove padding values represented by -100 in the "labels" tensor
-            mask = inputs["labels"] != -100
-            inputs["labels"] = inputs["labels"][mask]
-            inputs["attention_mask"] = inputs["attention_mask"][mask]
-            inputs["input_ids"] = inputs["input_ids"][mask]
-            if args.model_type in ["bert", "layoutlm"]:
-                inputs["token_type_ids"] = inputs["token_type_ids"][mask]
-            if args.model_type in ["layoutlm"]:
-                inputs["bbox"] = inputs["bbox"][mask]
+            # # Remove padding values represented by -100 in the "labels" tensor
+            # mask = inputs["labels"] != -100
+            # inputs["labels"] = inputs["labels"][mask]
+            # inputs["attention_mask"] = inputs["attention_mask"][mask]
+            # inputs["input_ids"] = inputs["input_ids"][mask]
+            # if args.model_type in ["bert", "layoutlm"]:
+                # inputs["token_type_ids"] = inputs["token_type_ids"][mask]
+            # if args.model_type in ["layoutlm"]:
+                # inputs["bbox"] = inputs["bbox"][mask]
 
             # Check if the input_ids tensor is empty after removing padding values
             if inputs["input_ids"].size(0) <= 0:
