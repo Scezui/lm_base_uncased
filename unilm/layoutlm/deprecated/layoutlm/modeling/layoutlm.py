@@ -81,7 +81,7 @@ class LayoutlmEmbeddings(nn.Module):
         )
         
         # print("Input tensor shape:", input_ids.shape)  # Print the shape of the input tensor
-        print("Position embeddings size:", self.w_position_embeddings.weight.size())
+        print("\nPosition embeddings size:", self.w_position_embeddings.weight.size())
         print("Maximum index value:", torch.max(input_ids))
         # Print input tensor shapes
         print(f"input_ids shape: {input_ids.shape}")
@@ -89,7 +89,7 @@ class LayoutlmEmbeddings(nn.Module):
         # print(f"attention_mask shape: {attention_mask.shape}")
         print(f"token_type_ids shape: {token_type_ids.shape}")
         print(f"position_ids shape: {position_ids.shape}")
-        print(f"inputs_embeds shape: {inputs_embeds.shape if inputs_embeds is not None else None}")
+        print(f"inputs_embeds shape: {inputs_embeds.shape if inputs_embeds is not None else None}\n")
         
 
 
