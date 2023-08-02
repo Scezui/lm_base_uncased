@@ -84,8 +84,8 @@ class LayoutlmEmbeddings(nn.Module):
         # Print Min And Max
         print("Input IDs - Min:", torch.min(input_ids), "Max:", torch.max(input_ids))
         print("BBox - Min:", torch.min(bbox), "Max:", torch.max(bbox))
-        if attention_mask is not None:
-            print("Attention Mask - Min:", torch.min(attention_mask), "Max:", torch.max(attention_mask))
+        # if attention_mask is not None:
+            # print("Attention Mask - Min:", torch.min(attention_mask), "Max:", torch.max(attention_mask))
         if token_type_ids is not None:
             print("Token Type IDs - Min:", torch.min(token_type_ids), "Max:", torch.max(token_type_ids))
         if position_ids is not None:
