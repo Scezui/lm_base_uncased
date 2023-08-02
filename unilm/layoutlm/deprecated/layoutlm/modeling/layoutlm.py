@@ -81,16 +81,16 @@ class LayoutlmEmbeddings(nn.Module):
         )
         
         
-        print(f"Minimum input_ids value: {torch.min(input_ids)}")
-        print(f"Maximum input_ids value: {torch.max(input_ids)}")
-        print(f"Minimum bbox value: {torch.min(bbox)}")
-        print(f"Maximum bbox value: {torch.max(bbox)}")
-        print(f"Minimum token_type_ids value: {torch.min(token_type_ids)}")
-        print(f"Maximum token_type_ids value: {torch.max(token_type_ids)}")
-        print(f"Minimum position_ids value: {torch.min(position_ids)}")
-        print(f"Maximum position_ids value: {torch.max(position_ids)}")
-        print(f"Minimum inputs_embeds value: {torch.min(inputs_embeds)}")
-        print(f"Maximum inputs_embeds value: {torch.max(inputs_embeds)}")
+        print(f"Input IDs: ({torch.min(input_ids)}, {torch.max(input_ids)})")
+        if bbox is not None:
+            print(f"BBox: ({torch.min(bbox)}, {torch.max(bbox)})")
+        if token_type_ids is not None:
+            print(f"Token Type IDs: ({torch.min(token_type_ids)}, {torch.max(token_type_ids)})")
+        if position_ids is not None:
+            print(f"Position IDs: ({torch.min(position_ids)}, {torch.max(position_ids)})")
+        if inputs_embeds is not None:
+            print(f"Inputs Embeds: ({torch.min(inputs_embeds)}, {torch.max(inputs_embeds)})")
+
 
         w_position_embeddings = self.w_position_embeddings(
             bbox[:, :, 2] - bbox[:, :, 0]
